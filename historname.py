@@ -9,9 +9,9 @@ from holoviews.streams import Stream
 from bokeh.models import Axis, HoverTool
 
 # https://github.com/bokeh/bokeh/pull/8062
-from bokeh.themes import built_in_themes
-hv.renderer('bokeh').theme = built_in_themes['light_minimal']
-hv.extension('bokeh')
+# from bokeh.themes import built_in_themes
+# hv.renderer('bokeh').theme = built_in_themes['light_minimal']
+# hv.extension('bokeh')
 
 # already processed
 # df = pd.read_csv('yob.1880.2017.txt')
