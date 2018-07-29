@@ -1,0 +1,8 @@
+bokeh
+param
+parambokeh
+numpy
+pandas
+holoviews
+hvplot
+IPython
