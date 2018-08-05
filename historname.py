@@ -11,9 +11,9 @@ from holoviews.streams import Stream
 from bokeh.models import Axis, HoverTool
 
 # https://github.com/bokeh/bokeh/pull/8062
-from bokeh.themes import built_in_themes
-hv.renderer('bokeh').theme = built_in_themes['light_minimal']
-hv.extension('bokeh')
+# from bokeh.themes import built_in_themes
+# hv.renderer('bokeh').theme = built_in_themes['light_minimal']
+# hv.extension('bokeh')
 
 NAME = 'name'
 YEAR = 'year'
@@ -26,6 +26,8 @@ WIDTH = 1050
 HEIGHT = 600
 WIDGET_WIDTH = 400
 YEARS = (1880, 2017)
+
+DEFAULT_COLORS = ['red', 'blue', 'orange', 'green', 'purple']
 
 ANDSTAR = 'And*'
 NOTES = """
@@ -45,7 +47,9 @@ NOTES = """
     <br>
     Names with fewer than 5 occurrences are not shown.<br>
     <br>
-    For more information see: ssa.gov/oact/babynames/background.html<br>
+    For more information see:<br>
+    ssa.gov/oact/babynames/background.html<br>
+    github.com/ahuang11/historname
     <br>
     Wildcard (*) is supported; will return the top 5 names.<br>
     <br>
@@ -118,7 +122,7 @@ def _smart_align(year):
     return text_align, text_offset
 
 
-def _finalize_obj(hv_obj, years):
+def _finalize_obj(hv_obj, years, hover=True):
     # subtract/add 25 to pad the text
     hv_obj = (hv_obj
         .redim.range(year=(years[0] - 20, years[1] + 20))
@@ -127,8 +131,11 @@ def _finalize_obj(hv_obj, years):
         .options(show_grid=True,
                  width=WIDTH,
                  height=HEIGHT,
-                 toolbar='above',
-                 tools=[HOVER]))
+                 toolbar='above'))
+
+    if hover:
+        hv_obj = hv_obj.options(tools=[HOVER])
+
     return hv_obj
 
 
@@ -136,9 +143,11 @@ def plot_pct_of_newborns(name, years):
     name_tot = _query_name(name, years)
     name_tseries = _finalize_obj(
         name_tot.hvplot(YEAR, PCT_NB,
+                        hover=False,
                         groupby=[NAME],
+                        color=DEFAULT_COLORS,
                         hover_cols=[COUNT, PCT_FM],
-                        ).overlay(NAME), years
+                        ).overlay(NAME), years, hover=False
     )
 
     name_points = _finalize_obj(
